@@ -6,7 +6,7 @@ const User=require("../models/userSchema")
 const {userValidate}=require("../../middlewares/middleware")
 const ConnectionRequest=require("../models/connectionRequestSchema")
 let wantedData="firstName lastName age gender skills about photoUrl";
-router.post("/signIn",async(req,res)=>{
+router.post("/signin",async(req,res)=>{
 
      try{
         validateData(req)
@@ -25,8 +25,8 @@ router.post("/signIn",async(req,res)=>{
 })
 
 router.post("/login",async(req,res)=>{
-   try{
-    let{firstName,emailId,password}=req.body;
+   try{console.log(req.body)
+    let{emailId,password}=req.body;
     
     let user=await User.findOne({emailId});
     
@@ -40,7 +40,7 @@ router.post("/login",async(req,res)=>{
         let token =user.getJwt();
        
         console.log(token)
-        return res.cookie("token",token,{expires:new Date(Date.now()+10*60*1000),maxAge:2*24*60*60*1000,httpOnly:true,secure:true}).json("succesfullyLogin")
+        return res.cookie("token",token,{expires:new Date(Date.now()+10*60*1000),httpOnly:true,secure:true,maxAge:2*24*60*60*1000,}).json({message:"succesfullyLogin",user})
     }
     throw new Error("incorrect credentials password")}
     catch(err){
@@ -83,4 +83,28 @@ router.get("/connections",userValidate,async(req,res)=>{
     res.status(400).send(err.message)
    }
 })
+router.get("/feed",userValidate,async(req,res)=>{
+try{
+    let page =parseInt(req.query.page)||1;
+    let limit=parseInt(req.query.limit)||10;
+    if(limit>30){limit=10}
+    const user=req.user;
+   
+    let connections=await ConnectionRequest.find({$or:[{fromUserId:user._id},{toUserId:user._id}]}).select("fromUserId toUserId")
+   
+    let connectionsBlockList=new Set()
+    connections.forEach((ele)=>{
+        if(ele.fromUserId.equals(user._id)){connectionsBlockList.add(ele.toUserId)}
+        else{connectionsBlockList.add(ele.fromUserId)}
+    })
+       connectionsBlockList.add(user._id)
+     
+    let showUsers=await User.find({_id:{$nin:Array.from(connectionsBlockList)}}).sort({updatedAt:-1}).skip((page-1)*limit).limit(limit).select(wantedData)
+    res.json(showUsers)
+}
+catch(err){
+    res.status(400).json({message:err.message})
+}
+})
+
 module.exports=router
