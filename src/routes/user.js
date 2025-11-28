@@ -11,9 +11,9 @@ router.post("/signin",async(req,res)=>{
      try{
         validateData(req)
         
-        let{firstName,lastName,emailId,password,gender,age}=req.body;
+        let{firstName,lastName,emailId,password,gender,age,photoUrl,skills}=req.body;
         password=await bcrypt.hash(password, 10);
-        let user1=new User({firstName,lastName,emailId,password,gender,age});
+        let user1=new User({firstName,lastName,emailId,password,gender,age,photoUrl,skills});
        
         let data=await user1.save();
         res.json({message:"signIn",data})
@@ -35,16 +35,16 @@ router.post("/login",async(req,res)=>{
     }
     
   let isUser= await user.comparePassword(password);
-    
+   
     if(isUser){
         let token =user.getJwt();
        
         console.log(token)
-        return res.cookie("token",token,{expires:new Date(Date.now()+10*60*1000),httpOnly:true,secure:true,maxAge:2*24*60*60*1000,}).json({message:"succesfullyLogin",user})
+        return res.cookie("token",token,{expires:new Date(Date.now()+10*60*1000),secure:true,httpOnly:true,maxAge:2*24*60*60*1000,}).json({message:"succesfullyLogin",user})
     }
     throw new Error("incorrect credentials password")}
     catch(err){
-        res.send(err.message)
+        res.status(401).send(err.message)
     }
 })
 router.post("/logout",userValidate,(req,res)=>{
@@ -100,7 +100,7 @@ try{
        connectionsBlockList.add(user._id)
      
     let showUsers=await User.find({_id:{$nin:Array.from(connectionsBlockList)}}).sort({updatedAt:-1}).skip((page-1)*limit).limit(limit).select(wantedData)
-    res.json(showUsers)
+    res.json({feed:showUsers})
 }
 catch(err){
     res.status(400).json({message:err.message})

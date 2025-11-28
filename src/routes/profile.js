@@ -8,7 +8,7 @@ const {userValidate}=require("../../middlewares/middleware")
 router.get("/view",userValidate,async(req,res)=>{
     try{
 console.log(req.user);
-res.send(req.user)
+res.send({user:req.user})
 
 
 }catch(err){

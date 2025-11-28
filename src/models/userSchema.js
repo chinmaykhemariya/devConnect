@@ -6,13 +6,13 @@ const userSchema=new mongoose.Schema({
     firstName:{
         type:String,
         required:true,
-        minLength:[4,"very short name"],
+        minLength:[2,"very short name"],
         maxLength:[50,"too long"]
     },
     lastName:{
         type:String,
-        uppercase:true,required:true,
-         minLength:[4,"very short lastname"],
+        required:true,
+         minLength:[2,"very short lastname"],
         maxLength:[50,"too long"],
         required:true
     },
