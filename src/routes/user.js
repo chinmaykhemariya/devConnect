@@ -70,12 +70,13 @@ router.get("/connections",userValidate,async(req,res)=>{
    try{
     let user=req.user;
        
-    let data =await ConnectionRequest.find({$or:[{fromUserId:user._id,status:"accepted"},{toUserId:user._id,status:"accepted"}]}).populate("fromUserId",wantedData).populate("toUserId",wantedData)
+    let data =await ConnectionRequest.find({$or:[{fromUserId:user._id,status:"accepted"},{toUserId:user._id,status:"accepted"}]}).sort({createdAt:-1}).populate("fromUserId",wantedData).populate("toUserId",wantedData)
+    
     data=data.map((e)=>{
         if(e.fromUserId._id.equals(user._id)){ return {connectionId:e._id,connectedTo:e.toUserId}}
        else{ return{ connectionId:e._id,connectedTo:e.fromUserId}}
     })
-    console.log(data)
+    
     res.json({message:"connections",data})
 
    }
