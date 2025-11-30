@@ -25,7 +25,8 @@ res.json({message:`${result.firstName} user is updated`,
     user:result
 })}
 catch(err){
-    res.send(err.message)
+    console.log(err.message)
+    res.status(400).send(err.message)
 }
 
 })

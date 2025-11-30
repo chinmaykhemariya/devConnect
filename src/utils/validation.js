@@ -9,8 +9,8 @@ if(!validator.isEmail(req.body?.emailId)){throw new Error("give valid email");
 if(!validator.isStrongPassword(req.body?.password)){throw new Error("give valid password")}
 
 }
-const validateEditData=(req,res,next)=>{try{
-    let allowedKeys=["firstName","lastName","skills","gender","age","photoUrl"];
+const validateEditData=(req,res,next)=>{try{console.log(req.body)
+    let allowedKeys=["firstName","lastName","skills","gender","age","photoUrl","about"];
     if(req.body?.photoUrl){
         if(!validator.isURL(req.body.photoUrl)){throw new Error("url is not correct")}
     }
@@ -20,7 +20,7 @@ const validateEditData=(req,res,next)=>{try{
   }
  
   next()}
-  catch(err){res.send(err.message)}
+  catch(err){res.status(400).send(err.message)}
 
 }
 module.exports={validateData,validateEditData}

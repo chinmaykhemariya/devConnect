@@ -6,14 +6,14 @@ const userSchema=new mongoose.Schema({
     firstName:{
         type:String,
         required:true,
-        minLength:[2,"very short name"],
-        maxLength:[50,"too long"]
+        minLength:[2,"very short firstname"],
+        maxLength:[50,"too long firstname"]
     },
     lastName:{
         type:String,
         required:true,
          minLength:[2,"very short lastname"],
-        maxLength:[50,"too long"],
+        maxLength:[50,"too long lastname"],
         required:true
     },
     emailId:{
@@ -22,19 +22,22 @@ const userSchema=new mongoose.Schema({
         unique:true,
         trim:true,
         validate(value){
-              if(!validator.isEmail(value)){throw new Error("email is not correct from schema "+value)}
+              if(!validator.isEmail(value)){throw new Error("email is not correct "+value)}
         }
     },
     password:{
         type:String,
         required:true,
         validate:(value)=>{
-                if(!validator.isStrongPassword(value)){throw new Error("weak password is not correct")}
+                if(!validator.isStrongPassword(value)){throw new Error("weak password ")}
         }
     },
     about:{
         type :String,
-       default:"hey i am new here using dev connect"
+       default:"hey i am new here using dev connect",
+       required:true,
+        maxLength:[50,"too long description"],
+      
     },
     age:{
         type:Number,
@@ -50,13 +53,13 @@ const userSchema=new mongoose.Schema({
         type:String,
         default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTc9APxkj0xClmrU3PpMZglHQkx446nQPG6lA&s",
         validate:(value)=>{
-                if(!validator.isURL(value)){throw new Error("url is not correct")}
+                if(!validator.isURL(value)){throw new Error("photo is not in correct format")}
         }
     },
     skills:
-        {type:[String],
+        {type:String,
         validate(value){
-            if(value.length>10){throw new Error("you cant add more skills")}
+            if(value.length>40){throw new Error("you cant add more skills")}
         }
         }
 },
