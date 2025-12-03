@@ -24,6 +24,7 @@ router.post("/send/:status/:toUserId",userValidate,async(req,res)=>{
     catch(err){res.send(err.message)}
 })
 router.patch("/review/:status/:requestId",userValidate,async(req,res)=>{try{
+    
     let{status,requestId}=req.params;
     let user=req.user;
     let allowedStatus=["accepted","rejected"]

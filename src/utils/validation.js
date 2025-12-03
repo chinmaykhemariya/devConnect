@@ -1,6 +1,6 @@
 const validator=require("validator")
 const validateData=(req)=>{
-let allowedKeys=["firstName","lastName","emailId","password","gender","age","skills","photoUrl","about"]
+let allowedKeys=["firstName","lastName","emailId","password","gender","age","skills","about"]
 if(!(Object.keys(req.body).every((key)=>{return allowedKeys.includes(key)}))){
     throw new Error("extra fields are there")
 }

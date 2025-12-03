@@ -51,15 +51,15 @@ const userSchema=new mongoose.Schema({
     },
     photoUrl:{
         type:String,
-        default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTc9APxkj0xClmrU3PpMZglHQkx446nQPG6lA&s",
+        default:"https://plus.unsplash.com/premium_photo-1682023585957-f191203ab239?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dXNlciUyMGljb258ZW58MHx8MHx8fDA%3D",
         validate:(value)=>{
                 if(!validator.isURL(value)){throw new Error("photo is not in correct format")}
         }
     },
     skills:
-        {type:String,
+        {type:String,required:true,
         validate(value){
-            if(value.length>40){throw new Error("you cant add more skills")}
+            if(value.length>50){throw new Error("you cant add more skills")}
         }
         }
 },

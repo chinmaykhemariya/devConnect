@@ -6,21 +6,21 @@ const User=require("../models/userSchema")
 const {userValidate}=require("../../middlewares/middleware")
 const ConnectionRequest=require("../models/connectionRequestSchema")
 let wantedData="firstName lastName age gender skills about photoUrl";
-router.post("/signin",async(req,res)=>{
+router.post("/signup",async(req,res)=>{
 
      try{
         validateData(req)
-        
-        let{firstName,lastName,emailId,password,gender,age,photoUrl,skills}=req.body;
+        console.log(req.body)
+        let{firstName,lastName,emailId,password,gender,age,about,skills}=req.body;
         password=await bcrypt.hash(password, 10);
-        let user1=new User({firstName,lastName,emailId,password,gender,age,photoUrl,skills});
+        let user1=new User({firstName,lastName,emailId,password,gender,age,skills});
        
         let data=await user1.save();
-        res.json({message:"signIn",data})
+        res.json({message:"signUp",data})
        
  }
    catch(err){
-    res.send(err.message)
+    res.status(400).send(err.message)
    }   
 })
 
@@ -59,18 +59,18 @@ router.get("/requests/recieved",userValidate,async(req,res)=>{
     try{
     let user=req.user;
     
-    let data =await ConnectionRequest.find({toUserId:user._id,status:"interested"}).populate("fromUserId",wantedData)
+    let data =await ConnectionRequest.find({toUserId:user._id,status:"interested"}).sort({createdAt:-1}).populate("fromUserId",wantedData)
     console.log(data)
     res.json({message:"requests",data})}
     catch(err){
-        res.send(err.message)
+        res.status(400).send(err.message)
     }
 })
 router.get("/connections",userValidate,async(req,res)=>{
    try{
     let user=req.user;
        
-    let data =await ConnectionRequest.find({$or:[{fromUserId:user._id,status:"accepted"},{toUserId:user._id,status:"accepted"}]}).sort({createdAt:-1}).populate("fromUserId",wantedData).populate("toUserId",wantedData)
+    let data =await ConnectionRequest.find({$or:[{fromUserId:user._id,status:"accepted"},{toUserId:user._id,status:"accepted"}]}).sort({updatedAt:-1}).populate("fromUserId",wantedData).populate("toUserId",wantedData)
     
     data=data.map((e)=>{
         if(e.fromUserId._id.equals(user._id)){ return {connectionId:e._id,connectedTo:e.toUserId}}
