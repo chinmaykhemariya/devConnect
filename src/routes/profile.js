@@ -4,7 +4,10 @@ const validator=require("validator")
 const User=require("../models/userSchema")
 const bcrypt=require("bcryptjs")
 const {validateEditData}=require("../utils/validation")
-const {userValidate}=require("../../middlewares/middleware")
+const {userValidate}=require("../../middlewares/middleware");
+const multer=require("multer");
+const{storage,cloudinary}=require("../utils/cloudinarySetup")
+const upload=multer({storage});
 router.get("/view",userValidate,async(req,res)=>{
     try{
 //console.log(req.user);
@@ -15,10 +18,13 @@ res.send({user:req.user})
    console.log(err)
 }
 })
-router.patch("/edit",userValidate,validateEditData,async(req,res)=>{try{
+router.patch("/edit",userValidate,upload.single('photoUrl'),validateEditData,async(req,res)=>{try{
  
 let user=req.user;
 Object.keys(req.body).forEach((key)=>user[key]=req.body[key])
+if(req.file){
+    user.photoUrl=req.file.path;
+}
 
 let result =await user.save()
 res.json({message:`${result.firstName} user is updated`,
@@ -46,4 +52,5 @@ router.patch("/password",userValidate,async(req,res)=>{try{
         res.send(err.message)
     }
 })
+
 module.exports=router

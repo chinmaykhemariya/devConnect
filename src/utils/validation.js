@@ -9,14 +9,16 @@ if(!validator.isEmail(req.body?.emailId)){throw new Error("give valid email");
 if(!validator.isStrongPassword(req.body?.password)){throw new Error("give valid password")}
 
 }
-const validateEditData=(req,res,next)=>{try{console.log(req.body)
-    let allowedKeys=["firstName","lastName","skills","gender","age","photoUrl","about"];
-    if(req.body?.photoUrl){
-        if(!validator.isURL(req.body.photoUrl)){throw new Error("url is not correct")}
+const validateEditData=(req,res,next)=>{try{console.log("validateEditData")
+  console.log(req.body)
+  console.log(req.file)
+    let allowedKeys=["firstName","lastName","skills","gender","age","about"];
+    if(req.file){
+        if(!validator.isURL(req.file.path)){throw new Error("url is not correct")}
     }
   let isCorrect=  Object.keys(req.body).every((key)=>allowedKeys.includes(key));
   if(!isCorrect){
-    throw new Error("invalid data")
+    throw new Error("invalid data ")
   }
  
   next()}
