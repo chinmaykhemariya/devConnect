@@ -11,7 +11,8 @@ const upload=multer({storage});
 router.get("/view",userValidate,async(req,res)=>{
     try{
 //console.log(req.user);
-res.send({user:req.user})
+  let  {firstName,lastName,gender,age,skills,about,photoUrl,_id}=req.user;
+res.send({user: {firstName,lastName,gender,age,skills,about,photoUrl,_id}})
 
 
 }catch(err){
@@ -27,8 +28,9 @@ if(req.file){
 }
 
 let result =await user.save()
+  let  {firstName,lastName,gender,age,skills,about,photoUrl,_id}=result;
 res.json({message:`${result.firstName} user is updated`,
-    user:result
+    user:{firstName,lastName,gender,age,skills,about,photoUrl,_id}
 })}
 catch(err){
     console.log(err.message)
