@@ -39,7 +39,7 @@ router.post("/login",async(req,res)=>{
     if(isUser){
         let token =user.getJwt();
      let  {firstName,lastName,gender,age,skills,about,photoUrl,_id}=user;
-        console.log(token)
+        
         return res.cookie("token",token,{expires:new Date(Date.now()+10*60*1000),secure:true,httpOnly:true,maxAge:2*24*60*60*1000,}).json({message:"succesfullyLogin",user:{firstName,lastName,gender,age,skills,about,photoUrl,_id}})
     }
     throw new Error("incorrect credentials password")}
