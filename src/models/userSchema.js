@@ -73,7 +73,7 @@ userSchema.methods.getJwt=function(){
 return jwt.sign({_id:this._id,firstName:this.firstName},process.env.jwt,{expiresIn:"3h"})
 }
 userSchema.methods.comparePassword=async function(password){
-    console.log("comparePassword")
+    
     return await bcrypt.compare(password,this.password);
 }
 
