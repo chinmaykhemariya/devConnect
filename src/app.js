@@ -29,7 +29,7 @@ app.use("/request",requestRouter)
 
 
 main().then((res)=>{console.log("mongodb connection established");
-app.listen(3001,()=>{
+app.listen(3001,"0.0.0.0",()=>{
     console.log("listening")
 })
 })
