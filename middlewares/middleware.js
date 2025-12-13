@@ -2,8 +2,8 @@ const jwt=require("jsonwebtoken");
 const User  = require("../src/models/userSchema");
 const userValidate=async(req,res,next)=>{try{
 let{token}=req.cookies;
-console.log("useravlidate");
-console.log(req.cookies)
+//console.log("useravlidate");
+//console.log(req.cookies)
 if(!token){
    return res.status(401).send("unauthorized access")
    

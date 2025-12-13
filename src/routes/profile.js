@@ -12,6 +12,7 @@ router.get("/view",userValidate,async(req,res)=>{
     try{
 //console.log(req.user);
   let  {firstName,lastName,gender,age,skills,about,photoUrl,_id}=req.user;
+  
 res.send({user: {firstName,lastName,gender,age,skills,about,photoUrl,_id}})
 
 
