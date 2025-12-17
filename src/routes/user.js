@@ -84,6 +84,20 @@ router.get("/connections",userValidate,async(req,res)=>{
     res.status(400).send(err.message)
    }
 })
+router.get("/connection/:chattingTo",userValidate,async(req,res)=>{
+    try{ let user=req.user;
+        let{chattingTo}=req.params;
+         let data =await ConnectionRequest.find({$or:[{fromUserId:user._id,status:"accepted",toUserId:chattingTo},{toUserId:user._id,fromUserId:chattingTo,status:"accepted"}]}).sort({updatedAt:-1}).populate("fromUserId","firstName lastName photoUrl").populate("toUserId","firstName lastName photoUrl");
+
+         data=data.map((e)=>{
+        if(e.fromUserId._id.equals(user._id)){ return {connectionId:e._id,connectedTo:e.toUserId}}
+       else{ return{ connectionId:e._id,connectedTo:e.fromUserId}}
+    })
+         res.send(data)
+    }
+    catch(err){console.log(err)}
+
+})
 router.get("/feed",userValidate,async(req,res)=>{
 try{
     let page =parseInt(req.query.page)||1;

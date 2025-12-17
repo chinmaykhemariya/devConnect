@@ -3,6 +3,7 @@ const router=express.Router();
 
 const {userValidate}=require("../../middlewares/middleware");
 const Chat=require("../models/chatSchema")
+
 router.get("/:chattingTo",userValidate,async(req,res)=>{
 let {chattingTo}=req.params;
 
@@ -15,4 +16,6 @@ if(!chat){
 }
 res.json({messages:chat.messages})
 })
+
+
 module.exports=router;

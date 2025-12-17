@@ -26,6 +26,7 @@ app.use(cors(
         credentials:true
     }
 ))
+
 app.use("/user",userRouter);
 app.use("/profile",profileRouter)
 app.use("/request",requestRouter);
