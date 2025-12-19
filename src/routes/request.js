@@ -2,7 +2,8 @@ const express=require("express");
 const router=express.Router({mergeParams:true});
 const User=require("../models/userSchema")
 const ConnectionRequest=require("../models/connectionRequestSchema")
-const {userValidate}=require("../../middlewares/middleware")
+const {userValidate}=require("../../middlewares/middleware");
+const sendEmail=require("../utils/sendEmail")
 router.post("/send/:status/:toUserId",userValidate,async(req,res)=>{
     try{
     let {toUserId,status}=req.params;
@@ -19,6 +20,11 @@ router.post("/send/:status/:toUserId",userValidate,async(req,res)=>{
    if(prevConnection){throw new Error("connection already exists")}
     const connection =new ConnectionRequest({fromUserId,toUserId,status});
     const data=await connection.save();
+    if(status=="interested"){
+        console.log("interested")
+      const emailCommand=  await sendEmail.run();
+      console.log(emailCommand)
+    }
     return res.json({message:"connection send", data});
    }
     catch(err){res.send(err.message)}
