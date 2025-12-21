@@ -1,6 +1,7 @@
 if(process.env.NODE_ENV !="production"){
 require('dotenv').config()
 }
+require("./utils/cronJobs")
 const cors=require("cors")
 const cookieParser = require('cookie-parser')
 const validateData=require("./utils/validation")
